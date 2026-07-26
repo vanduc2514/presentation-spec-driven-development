@@ -5,10 +5,13 @@
   "private": true,
   "scripts": {
     "build": "node build.cjs",
+    "generate-pdf": "node generate-pdf.cjs",
     "preview": "open output/index.html"
   },
   "devDependencies": {
-    "markpress": "^4.0.0"
+    "highlight.js": "^11.9.0",
+    "markpress": "^4.0.0",
+    "playwright": "^1.61.1"
   },
   "overrides": {
     "first-mate": "^7.4.3",

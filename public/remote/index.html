@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#11111b" />
+    <title>Presentation Remote</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #11111b;
+        --surface: #1e1e2e;
+        --border: #313244;
+        --text: #cdd6f4;
+        --sub: #bac2de;
+        --muted: #6c7086;
+        --accent: #4f46e5;
+        --green: #a6e3a1;
+        --yellow: #f9e2af;
+        --red: #f38ba8;
+      }
+
+      html,
+      body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, "Inter", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+
+      #connect-screen {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+        gap: 0.8rem;
+      }
+
+      #connect-screen h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.2rem;
+      }
+
+      #connect-screen p {
+        color: var(--sub);
+        font-size: 0.9rem;
+        text-align: center;
+        max-width: 360px;
+        line-height: 1.5;
+      }
+
+      #pw-input {
+        width: 100%;
+        max-width: 320px;
+        padding: 0.7rem 1rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.15s;
+        margin-top: 0.5rem;
+      }
+
+      #pw-input:focus {
+        border-color: var(--accent);
+      }
+
+      #pw-input::placeholder {
+        color: var(--muted);
+      }
+
+      #error-msg {
+        color: var(--red);
+        font-size: 0.82rem;
+        display: none;
+      }
+
+      #connect-btn {
+        padding: 0.7rem 2rem;
+        border: none;
+        border-radius: 10px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s;
+        margin-top: 0.3rem;
+      }
+
+      #connect-btn:hover {
+        background: #5b52df;
+      }
+
+      #control-screen {
+        height: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        padding: 2rem;
+        user-select: none;
+      }
+
+      #slide-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--text);
+        text-align: center;
+        min-height: 1.5em;
+        max-width: 360px;
+        line-height: 1.4;
+      }
+
+      #slide-num {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      #slide-total {
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      #nav-area {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .nav-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 1.6rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.12s, border-color 0.12s;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .nav-btn:active {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      #speaker-notes {
+        margin-top: 0.5rem;
+        padding: 1rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        max-width: 360px;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        color: var(--sub);
+        display: none;
+        white-space: pre-wrap;
+      }
+
+      #speaker-notes-label {
+        font-size: 0.72rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      #status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="connect-screen">
+      <h1>Presentation Remote</h1>
+      <p>Enter the session password shown on the presenter's screen.</p>
+      <input id="pw-input" type="password" placeholder="Session password" autocomplete="off" />
+      <div id="error-msg">Invalid password or session not found.</div>
+      <button id="connect-btn">Connect</button>
+    </div>
+
+    <div id="control-screen">
+      <div id="slide-num"><span id="current">1</span><span id="slide-total"> / <span id="total">0</span></span></div>
+      <div id="slide-title"></div>
+      <div id="nav-area">
+        <button class="nav-btn" id="prev-btn" title="Previous">&#x2039;</button>
+        <button class="nav-btn" id="next-btn" title="Next">&#x203a;</button>
+      </div>
+      <div id="speaker-notes-label">Speaker Notes</div>
+      <div id="speaker-notes"></div>
+      <div><span id="status-dot" style="background:var(--yellow)"></span><span id="status-text">Connecting...</span></div>
+    </div>
+
+    <script>
+      (() => {
+        'use strict';
+
+        const NTFY = 'https://ntfy.sh';
+        const POLL_MS = 2000;
+
+        const $ = (id) => document.getElementById(id);
+
+        const connectScreen = $('connect-screen');
+        const controlScreen = $('control-screen');
+        const pwInput = $('pw-input');
+        const connectBtn = $('connect-btn');
+        const errorMsg = $('error-msg');
+        const currentEl = $('current');
+        const totalEl = $('total');
+        const titleEl = $('slide-title');
+        const notesEl = $('speaker-notes');
+        const statusDot = $('status-dot');
+        const statusText = $('status-text');
+
+        // ── derive ntfy topics ──────────────────────────────────────────
+        const deriveTopics = (pw) => {
+          let hash = 0;
+          for (let i = 0; i < pw.length; i++) {
+            const chr = pw.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0;
+          }
+          const b64 = btoa(String(Math.abs(hash)));
+          const base = 'pres-' + b64.slice(0, 8).replace(/[^a-zA-Z0-9]/g, 'x').toLowerCase();
+          return { stateTopic: base + '-s', cmdTopic: base + '-r' };
+        };
+
+        // ── fetch speaker notes from state message ──────────────────────
+        const parseNotes = (msg) => {
+          try {
+            const d = JSON.parse(msg);
+            return (d.notes || '').trim();
+          } catch { return ''; }
+        };
+
+        let cmdTopic = '';
+        let stateTopic = '';
+        let pollTimer = null;
+        let lastState = '';
+
+        const pollState = async () => {
+          try {
+            const r = await fetch(`${NTFY}/${stateTopic}/json?poll=1&since=${Date.now() - 5000}`);
+            if (!r.ok) return;
+            const msgs = await r.json();
+            const latest = Array.isArray(msgs) ? msgs[msgs.length - 1] : msgs;
+            if (!latest || !latest.message) return;
+            if (latest.message === lastState) return;
+            lastState = latest.message;
+            const data = JSON.parse(latest.message);
+            if (data.current !== undefined) currentEl.textContent = data.current + 1;
+            if (data.total !== undefined) totalEl.textContent = data.total;
+            if (data.title !== undefined) titleEl.textContent = data.title || '';
+            const notes = parseNotes(latest.message);
+            if (notes) {
+              notesEl.style.display = 'block';
+              notesEl.textContent = notes;
+            } else {
+              notesEl.style.display = 'none';
+              notesEl.textContent = '';
+            }
+            statusDot.style.background = 'var(--green)';
+            statusText.textContent = 'Connected';
+          } catch {
+            statusDot.style.background = 'var(--yellow)';
+            statusText.textContent = 'Reconnecting...';
+          }
+        };
+
+        const sendCmd = (cmd) => {
+          fetch(`${NTFY}/${cmdTopic}`, { method: 'POST', body: cmd });
+        };
+
+        const startSession = () => {
+          controlScreen.style.display = 'flex';
+          connectScreen.style.display = 'none';
+          statusDot.style.background = 'var(--yellow)';
+          statusText.textContent = 'Connecting...';
+          pollState();
+          pollTimer = setInterval(pollState, POLL_MS);
+        };
+
+        // ── connect button handler ──────────────────────────────────────
+        connectBtn.addEventListener('click', () => {
+          const pw = pwInput.value.trim();
+          if (!pw) return;
+          const topics = deriveTopics(pw);
+          stateTopic = topics.stateTopic;
+          cmdTopic = topics.cmdTopic;
+          errorMsg.style.display = 'none';
+          startSession();
+        });
+
+        pwInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') connectBtn.click();
+        });
+
+        // ── navigation ──────────────────────────────────────────────────
+        $('prev-btn').addEventListener('click', () => sendCmd('prev'));
+        $('next-btn').addEventListener('click', () => sendCmd('next'));
+
+        // ── swipe support ───────────────────────────────────────────────
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+          const diff = touchStartX - e.changedTouches[0].screenX;
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) sendCmd('next');
+            else sendCmd('prev');
+          }
+        }, { passive: true });
+      })();
+    </script>
+  </body>
+</html>

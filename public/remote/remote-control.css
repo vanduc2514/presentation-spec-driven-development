@@ -1,0 +1,181 @@
+/* remote-control.css — Presenter-side modal + floating button */
+#rc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+}
+#rc-overlay.rc-open {
+  display: flex;
+}
+
+#rc-modal {
+  background: #1e1e2e;
+  border: 1px solid #313244;
+  border-radius: 20px;
+  padding: 1.8rem 2rem 2rem;
+  width: min(400px, 88vw);
+  position: relative;
+  color: #cdd6f4;
+  font-family: "Inter", system-ui, sans-serif;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+}
+
+#rc-modal-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: 0 0 1.4rem;
+  color: #cdd6f4;
+  letter-spacing: -0.01em;
+}
+
+#rc-close-btn {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  background: none;
+  border: none;
+  color: #585b70;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  line-height: 1;
+}
+#rc-close-btn:hover {
+  color: #cdd6f4;
+}
+
+#rc-setup-panel label {
+  display: block;
+  font-size: 0.82rem;
+  color: #a6adc8;
+  margin-bottom: 0.4rem;
+}
+
+#rc-pw-input {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #313244;
+  background: #11111b;
+  color: #cdd6f4;
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+#rc-pw-input:focus {
+  border-color: #4f46e5;
+}
+
+#rc-setup-error {
+  color: #f38ba8;
+  font-size: 0.78rem;
+  margin-top: 0.3rem;
+}
+
+#rc-start-btn,
+#rc-stop-btn {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 0.7rem;
+}
+#rc-start-btn:hover,
+#rc-stop-btn:hover {
+  background: #5b52df;
+}
+
+#rc-active-panel {
+  text-align: center;
+}
+
+#rc-status {
+  font-size: 0.82rem;
+  color: #a6adc8;
+  margin-bottom: 1rem;
+}
+
+#rc-qr-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+#rc-qr-canvas {
+  background: #fff;
+  padding: 0.5rem;
+  border-radius: 10px;
+  display: inline-block;
+}
+#rc-qr-canvas img,
+#rc-qr-canvas canvas {
+  display: block;
+}
+
+#rc-url-btn {
+  background: none;
+  border: 1px dashed #585b70;
+  color: #bac2de;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#rc-url-btn:hover {
+  border-color: #4f46e5;
+  color: #cdd6f4;
+}
+
+#rc-count {
+  font-size: 0.78rem;
+  color: #585b70;
+  margin-top: 0.5rem;
+}
+
+/* ── Floating button on presentation ────────────────── */
+#rc-btn {
+  position: fixed;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(7.2rem);
+  z-index: 9999;
+  padding: 0.35rem 0.7rem;
+  border-radius: 20px;
+  border: 1px solid var(--line, #e4e4e7);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink-dim, #52525b);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: background 0.15s;
+}
+#rc-btn:hover {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--ink, #18181b);
+}
+
+@media (max-width: 640px) {
+  #rc-btn {
+    transform: translateX(4.5rem);
+  }
+}

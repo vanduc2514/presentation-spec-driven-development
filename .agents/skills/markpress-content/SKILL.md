@@ -164,7 +164,7 @@ Everything else — cards, grids, columns, callouts, timelines — belongs in th
 Standard markdown image syntax works. By default markpress **embeds** images as base64 inside the HTML (self-contained output). To skip embedding and keep external references, use `--no-embed` / `noEmbed: true`.
 
 ```markdown
-![Diagram](./assets/diagram.png)
+![Diagram](./images/diagram.png)
 ```
 
 ---
@@ -181,5 +181,5 @@ Standard markdown image syntax works. By default markpress **embeds** images as 
    This starts a local web server with live refresh on file save.
 5. **Build final output**:
    ```bash
-   markpress input.md output.html
+   npm run build
    ```

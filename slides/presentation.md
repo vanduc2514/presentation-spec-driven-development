@@ -77,9 +77,17 @@ Spec-Driven Development with OpenSpec
 <!--slide-attr x=3200 y=400 rotate=3 scale=1.0 -->
 
 
+<div class="image-only-col">
+
 # Context Windows Limitation
 
+<div class="image-only-img">
+
 ![context.png](images/context.png)
+
+</div>
+
+</div>
 
 ------
 
@@ -143,7 +151,11 @@ Create the **specification artifact** first — everything else is derived from 
 
 <!--slide-attr x=-2500 y=100 rotate=-3 scale=1.05 -->
 
+<div class="global-image-col">
+
 # The Intent Compiler
+
+<div class="col-left">
 
 > A compiler catches errors before your code runs.
 > Spec catches misunderstandings before your AI codes.
@@ -152,7 +164,15 @@ Create the **specification artifact** first — everything else is derived from 
 - Implementation stage → expensive to steer
 - Production → impossible to steer
 
+</div>
+
+<div class="col-right">
+
 ![intent.png](images/intent.png)
+
+</div>
+
+</div>
 
 <!-- SPEAKER NOTES — Slide 7 (~2 min)
 - Every developer knows you don't skip compilation. It catches errors early, when they're cheap.

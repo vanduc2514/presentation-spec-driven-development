@@ -111,7 +111,11 @@ Create the **specification artifact** first — everything else is derived from 
 
 <!--slide-attr x=-900 y=2200 rotate=-2 scale=1.0 -->
 
+<div class="global-image-col">
+
 # The SDD Workflow
+
+<div class="col-left">
 
 | Stage | What Happens |
 |-------|-------------|
@@ -120,7 +124,15 @@ Create the **specification artifact** first — everything else is derived from 
 | **Validation** | Verify implementation against the spec |
 | **Archive** | Archive after implementation done |
 
+</div>
+
+<div class="col-right">
+
 ![sdd.png](images/sdd.png)
+
+</div>
+
+</div>
 
 <!-- SPEAKER NOTES — Slide 5b
 - Walk through each stage: Plan scopes the problem. Spec details requirements. Tasks break it into execution steps. Then the AI implements. Validation checks against the spec. Archive keeps context alive.

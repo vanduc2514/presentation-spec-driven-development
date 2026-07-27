@@ -111,7 +111,11 @@ Tạo **spec artifact** trước — mọi thứ khác được suy ra từ nó
 
 <!--slide-attr x=-900 y=2200 rotate=-2 scale=1.0 -->
 
+<div class="global-image-col">
+
 # Quy Trình SDD
+
+<div class="col-left">
 
 | Giai đoạn | Mô tả |
 |-----------|-------|
@@ -120,7 +124,15 @@ Tạo **spec artifact** trước — mọi thứ khác được suy ra từ nó
 | **Validation** | Kiểm tra implementation với spec |
 | **Archive** | Lưu trữ sau khi hoàn thành |
 
+</div>
+
+<div class="col-right">
+
 ![sdd.png](images/sdd.png)
+
+</div>
+
+</div>
 
 <!-- SPEAKER NOTES — Slide 5b
 - Walk through each stage: Plan scopes the problem. Spec details requirements. Tasks break it into execution steps. Then the AI implements. Validation checks against the spec. Archive keeps context alive.

@@ -80,6 +80,15 @@
     }
   }, { passive: false, capture: true });
 
+  // ── Language switcher — preserve current slide via hash ────────────
+  document.body.addEventListener('click', (e) => {
+    if (e.target.id !== 'lang-switcher') return;
+    e.preventDefault();
+    const active = document.querySelector('.step.present, .step.active');
+    const href = e.target.getAttribute('href').split('?')[0].split('#')[0];
+    window.location.href = `${href}#/${active?.id || 'step-1'}`;
+  });
+
   // ── Image zoom modal ───────────────────────────────────────────────
   (() => {
     const modal = Object.assign(document.createElement('div'), {

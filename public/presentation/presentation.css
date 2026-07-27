@@ -566,11 +566,38 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* ── Language switcher ──────────────────────────────────────────────── */
+#lang-switcher {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--group-accent);
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: background 150ms, box-shadow 150ms;
+}
+#lang-switcher:hover {
+  background: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
 /* ── Print styles ──────────────────────────────────────────────────── */
 @media print {
   .gh-badge,
   .slide-nav,
   .slide-download-link,
+  #lang-switcher,
   #rc-btn,
   #rc-overlay {
     display: none !important;

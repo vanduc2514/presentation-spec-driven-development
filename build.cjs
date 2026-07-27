@@ -5,9 +5,11 @@ const path = require("path");
 const hljs = require("highlight.js");
 const markpress = require("markpress");
 
-const INPUT = path.resolve(__dirname, "slides/presentation.md");
+const INPUT_EN = path.resolve(__dirname, "slides/presentation.md");
+const INPUT_VI = path.resolve(__dirname, "slides/presentation.vi.md");
 const OUTPUT_DIR = path.resolve(__dirname, "output");
-const OUTPUT = path.resolve(OUTPUT_DIR, "index.html");
+const OUTPUT_EN = path.resolve(OUTPUT_DIR, "index.html");
+const OUTPUT_VI = path.resolve(OUTPUT_DIR, "index.vi.html");
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ASSET PATHS
@@ -53,6 +55,14 @@ const GOOGLE_FONTS_HTML = `
 `;
 
 // ─────────────────────────────────────────────────────────────────────────────
+// LANGUAGE SWITCHER
+// ─────────────────────────────────────────────────────────────────────────────
+const LANG_SWITCHER = {
+  en: '<a id="lang-switcher" href="./index.vi.html" title="Switch to Ti\u1ebfng Vi\u1ec7t">\u{1F1FB}\u{1F1F3} Ti\u1ebfng Vi\u1ec7t</a>',
+  vi: '<a id="lang-switcher" href="./index.html" title="Switch to English">\u{1F1EC}\u{1F1E7} English</a>',
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // GITHUB BADGE
 // ─────────────────────────────────────────────────────────────────────────────
 const GITHUB_BADGE_HTML = `
@@ -93,8 +103,9 @@ const applyHighlighting = (html) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // BUILD FUNCTION
 // ─────────────────────────────────────────────────────────────────────────────
-const buildPresentation = async () => {
-  const { html } = await markpress(INPUT, { theme: false });
+const buildPresentation = async (input, output, langSwitcherHtml, pdfSuffix) => {
+  const pdfFilename = getPdfFilename(pdfSuffix);
+  const { html } = await markpress(input, { theme: false });
 
   let stripped = html
     .replace(/<link[^>]+markpress[^>]*>/gi, "")
@@ -125,7 +136,7 @@ const buildPresentation = async () => {
     ].join("\n") + "\n";
 
   // ── PDF filename script + presentation.js ─────────────────────────────
-  const pdfScript = `<script>window.__PDF_FILENAME__="${getPdfFilename()}";</script>\n`;
+  const pdfScript = `<script>window.__PDF_FILENAME__="${pdfFilename}";</script>\n`;
   const jsScript = '<script src="presentation.js"></script>\n';
 
   // ── Assemble final HTML ───────────────────────────────────────────────
@@ -133,20 +144,21 @@ const buildPresentation = async () => {
     .replace("<head>", `<head>\n${GTM_HTML}\n${GOOGLE_FONTS_HTML}`)
     .replace("</head>", `${cssLink}\n${remoteCssTag}\n</head>`)
     .replace("<body>", `<body>\n${GITHUB_BADGE_HTML}`)
-    .replace("</body>", `${remoteScripts}\n</body>`)
+    .replace("</body>", `${langSwitcherHtml}\n${remoteScripts}\n</body>`)
     .replace(
       "<script>impress().init();</script>",
       `<script>impress().init();</script>\n${pdfScript}${jsScript}`,
     );
 
-  fs.writeFileSync(OUTPUT, finalHtml, "utf8");
-  console.log(`Built: ${OUTPUT}`);
+  fs.writeFileSync(output, finalHtml, "utf8");
+  console.log(`Built: ${output}`);
 };
 
 // ── Shared: PDF filename derivation ──────────────────────────────────
-const getPdfFilename = () => {
+const getPdfFilename = (suffix) => {
   const GIT_HASH = (process.env.BUILD_GIT_SHA || "").slice(0, 7);
   let name = "presentation";
+  if (suffix) name += `-${suffix}`;
   if (GIT_HASH) name += `-${GIT_HASH}`;
   return name + ".pdf";
 };
@@ -179,7 +191,10 @@ if (require.main === module) {
   copyFile(PRESENTATION_CSS_FILE, path.join(OUTPUT_DIR, "presentation.css"));
   copyFile(PRESENTATION_JS_FILE, path.join(OUTPUT_DIR, "presentation.js"));
 
-  buildPresentation().catch((err) => {
+  Promise.all([
+    buildPresentation(INPUT_EN, OUTPUT_EN, LANG_SWITCHER.en, "en"),
+    buildPresentation(INPUT_VI, OUTPUT_VI, LANG_SWITCHER.vi, "vi"),
+  ]).catch((err) => {
     console.error("Build failed:", err);
     process.exit(1);
   });

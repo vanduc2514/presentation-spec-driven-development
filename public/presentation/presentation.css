@@ -1,5 +1,5 @@
 /* ── PRESENTATION STYLES ────────────────────────────────────────────────
- * Extracted from build.cjs's customCss template literal.
+ * Adapted from agent-presentation-markpress template.
  * Loaded via <link rel="stylesheet"> in the generated presentation HTML.
  * ───────────────────────────────────────────────────────────────────── */
 
@@ -9,78 +9,78 @@
   --muted: #a1a1aa;
   --line: #e4e4e7;
   --accent: #4f46e5;
-  --accent2: #059669;
-  --radius: 28px;
+  --group-accent: #4f46e5;
+  --border-accent-width: 5px;
+  --radius: 20px;
 }
 
-/* Simple solid background — same approach as markpress default theme.
-   No multi-layer gradients; those repaint every frame during canvas transform. */
-html, body {
+html,
+body {
   overflow: hidden;
-  background: radial-gradient(#f0ede8, #d8d2c8);
+  background: #f1f5f9;
   color: var(--ink);
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-family: "Space Grotesk", "Inter", "Segoe UI", system-ui, sans-serif;
 }
 
-/* On mobile, allow the page itself to scroll if content overflows */
 @media (max-width: 900px) {
   html, body {
     overflow: auto;
   }
 }
 
-/* All slides live in the DOM simultaneously inside the moving canvas.
-   Keep base .step completely flat — opaque solid, no pseudo-elements, no shadow.
-   Only opacity animates; the browser can blit it as a plain layer.
-   pointer-events: none prevents invisible slides from capturing clicks when
-   they spatially overlap the active slide in the impress.js canvas. */
+/* ── Slides ─────────────────────────────────────────────────────────── */
 .step {
   width: min(1160px, 84vw);
   min-height: min(680px, 75vh);
-  padding: 3.6rem 4.2rem;
+  padding: 2.8rem 3.2rem;
   box-sizing: border-box;
   border: 1px solid var(--line);
+  border-top: var(--border-accent-width) solid var(--group-accent);
   border-radius: var(--radius);
-  background: #faf9f7;
+  background: #ffffff;
   opacity: 0;
   pointer-events: none;
   transition: opacity 200ms ease;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 0.2rem;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-/* Active slide: add shadow. Only 1 slide active at a time — cost is minimal. */
 .step.active {
   opacity: 1;
   pointer-events: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .step > *:first-child {
   margin-top: 0;
 }
 
-/* ── Typography ───────────────────────────────── */
+/* ── Typography ─────────────────────────────────────────────────────── */
 .step h1,
 .step h2,
 .step h3 {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
   letter-spacing: -0.03em;
-  line-height: 1.0;
+  line-height: 1;
   color: var(--ink);
   margin-bottom: 0.65rem;
   border-bottom: 0;
 }
 
 .step h1 {
-  font-size: clamp(2.6rem, 5.2vmin, 5.2rem);
-  font-weight: 300;
+  font-size: clamp(2.35rem, 4.9vmin, 4.8rem);
+  font-weight: 700;
   max-width: 820px;
 }
 
 .step h2 {
-  font-size: clamp(1.1rem, 2.1vmin, 1.85rem);
+  font-size: clamp(1.05rem, 2vmin, 1.6rem);
   color: var(--ink-dim);
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -88,241 +88,381 @@ html, body {
 }
 
 .step h3 {
-  font-size: clamp(1rem, 1.8vmin, 1.3rem);
-  font-weight: 500;
-  color: var(--accent);
-  letter-spacing: 0.02em;
+  font-size: clamp(0.85rem, 1.6vmin, 1.2rem);
+  color: var(--group-accent);
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 .step p,
-.step li {
-  font-size: clamp(1rem, 1.6vmin, 1.25rem);
-  line-height: 1.6;
+.step li,
+.step td,
+.step th,
+.step blockquote {
+  font-size: clamp(1rem, 1.65vmin, 1.3rem);
+  line-height: 1.45;
   color: var(--ink);
-}
-
-.step strong {
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.step a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.step a:hover {
-  text-decoration: underline;
+  font-weight: 400;
 }
 
 .step ul,
 .step ol {
-  padding-left: 1.5rem;
+  margin-top: 1.2rem;
+  padding-left: 1.1em;
 }
 
 .step li {
-  margin-bottom: 0.35rem;
+  margin: 0.45rem 0;
+  padding-left: 0.3rem;
 }
 
-/* ── Code ────────────────────────────────────── */
-.step code {
-  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
-  font-size: 0.85em;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 0.1em 0.3em;
-  border-radius: 4px;
+.step li::marker {
+  color: var(--group-accent);
+  content: "\25b8  ";
 }
 
-.step pre {
-  background: #1e1e2e;
-  color: #cdd6f4;
-  padding: 1.2rem 1.4rem;
-  border-radius: 12px;
-  overflow-x: auto;
-  font-size: clamp(0.7rem, 1.2vmin, 0.85rem);
-  line-height: 1.5;
-  margin: 0.6rem 0;
+.step strong {
+  color: var(--group-accent);
+  font-weight: 700;
 }
 
-.step pre code {
-  background: none;
-  padding: 0;
-  font-size: inherit;
+.step a {
+  color: var(--group-accent);
+  text-decoration: none;
+  border-bottom: 1px solid #e4e4e7;
+  transition: border-color 150ms;
 }
 
-/* ── Blockquote ───────────────────────────────── */
+.step a:hover {
+  border-bottom-color: var(--group-accent);
+}
+
 .step blockquote {
-  border-left: 4px solid var(--accent);
-  padding: 0.5rem 1rem;
-  margin: 0.8rem 0;
-  background: rgba(79, 70, 229, 0.06);
-  border-radius: 0 8px 8px 0;
+  margin: 1.4rem 0 0;
+  padding: 1rem 0 1rem 1.4rem;
+  border-left: 4px solid var(--group-accent);
   color: var(--ink-dim);
+  background: #f8fafc;
+  border-radius: 0 12px 12px 0;
 }
 
-/* ── Tables ──────────────────────────────────── */
+/* ── Tables ─────────────────────────────────────────────────────────── */
 .step table {
   width: 100%;
-  border-collapse: collapse;
-  margin: 0.6rem 0;
-  font-size: clamp(0.8rem, 1.3vmin, 1rem);
+  margin-top: 1.6rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #ffffff;
+}
+
+.step thead th {
+  background: #f4f4f5;
+  color: var(--group-accent);
+  font-size: clamp(0.8rem, 1.45vmin, 1.05rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .step th,
 .step td {
-  padding: 0.5rem 0.8rem;
-  text-align: left;
+  padding: 0.9rem 1.1rem;
+  border: 0;
   border-bottom: 1px solid var(--line);
+  vertical-align: top;
 }
 
-.step th {
-  font-weight: 600;
-  color: var(--ink);
-  background: rgba(0, 0, 0, 0.02);
+.step tr:last-child td {
+  border-bottom: 0;
 }
 
-/* ── Images ──────────────────────────────────── */
+/* ── Code ───────────────────────────────────────────────────────────── */
+.step code {
+  display: inline-block;
+  padding: 0.1em 0.52em;
+  border-radius: 6px;
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
+  color: #0f172a;
+  font-size: 0.88em;
+  font-family: "SF Mono", "Fira Code", monospace;
+}
+
+.step pre {
+  padding: 0.95rem 1.1rem;
+  border-radius: 18px;
+  border: 1px solid #e4e4e7;
+  background: #f8fafc;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.step pre code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #18181b;
+  border-radius: 0;
+}
+
+/* ── Images ─────────────────────────────────────────────────────────── */
 .step img {
   max-width: 100%;
   height: auto;
   border-radius: 12px;
-  margin: 0.6rem 0;
+  border: 1px solid var(--line);
+  cursor: pointer;
 }
 
-/* ── GitHub badge ────────────────────────────── */
+/* ── Per-slide group accent colors ──────────────────────────────────── */
+/* Slide 1: Title — orange */
+#step-1 {
+  --group-accent: #f97316;
+  background: #fff7ed;
+  border-top-width: calc(var(--border-accent-width) + 1px);
+}
+#step-1 h1 {
+  font-size: clamp(3.2rem, 6.4vmin, 6.4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+#step-1 h2 {
+  margin-top: 0.7rem;
+  font-weight: 400;
+  color: var(--ink-dim);
+}
+
+/* Slides 2-5: Problems — red */
+#step-2,
+#step-3,
+#step-4,
+#step-5 {
+  --group-accent: #ef4444;
+}
+
+/* Slides 6-7: SDD definition — green */
+#step-6,
+#step-7 {
+  --group-accent: #22c55e;
+}
+
+/* Slides 8-10: Comparison & framework — blue */
+#step-8,
+#step-9,
+#step-10 {
+  --group-accent: #3b82f6;
+}
+
+/* Slides 11-13: Closing — purple */
+#step-11,
+#step-12,
+#step-13 {
+  --group-accent: #a855f7;
+}
+
+/* Thank You slide — centered */
+#step-13 {
+  text-align: center;
+  justify-content: center;
+}
+#step-13 h1 {
+  font-size: clamp(3.2rem, 6.4vmin, 6.4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+
+/* ── Syntax Highlighting (GitHub-inspired light) ────────────────────── */
+.hljs {
+  color: #24292e;
+  background: transparent;
+}
+.hljs-keyword,
+.hljs-selector-tag { color: #d73a49; font-weight: 600; }
+.hljs-string,
+.hljs-attr { color: #032f62; }
+.hljs-number,
+.hljs-literal { color: #005cc5; }
+.hljs-property,
+.hljs-built_in { color: #6f42c1; }
+.hljs-comment,
+.hljs-quote { color: #6a737d; font-style: italic; }
+.hljs-variable,
+.hljs-title { color: #e36209; }
+.hljs-punctuation { color: #586069; }
+
+/* ── GitHub badge ──────────────────────────────────────────────────── */
 .gh-badge {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1000;
+  top: 16px;
+  left: 20px;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: transform 0.15s ease;
-  backdrop-filter: blur(4px);
-}
-
-.gh-badge:hover {
-  transform: scale(1.1);
-}
-
-/* ── Language switcher ───────────────────────── */
-#lang-switcher {
-  position: fixed;
-  bottom: 1.2rem;
-  right: 1.2rem;
-  z-index: 1000;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid var(--line);
-  color: var(--ink-dim) !important;
-  font-size: 0.78rem;
-  font-weight: 500;
+  background: rgba(255, 255, 255, 0.75);
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: background 0.15s;
-  backdrop-filter: blur(4px);
+  opacity: 0.5;
+  transition: opacity 200ms ease, background 200ms ease;
+}
+.gh-badge:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.98);
+}
+.gh-badge svg {
+  fill: #18181b;
+  display: block;
 }
 
-#lang-switcher:hover {
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--ink) !important;
-}
-
-/* ── Slide navigation bar ────────────────────── */
+/* ── Slide navigation bar ──────────────────────────────────────────── */
 .slide-nav {
   position: fixed;
-  bottom: 1.2rem;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
+  z-index: 9998;
   display: flex;
-  gap: 0.4rem;
-  padding: 0.4rem 0.6rem;
-  border-radius: 100px;
-  background: rgba(255, 255, 255, 0.88);
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--line);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
 }
 
 .slide-nav-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.35rem 0.7rem;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 14px;
   border: none;
-  border-radius: 100px;
+  border-radius: 999px;
   background: transparent;
   color: var(--ink-dim);
-  font-size: 0.78rem;
-  font-weight: 500;
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background 0.12s, color 0.12s;
+  transition: background 0.15s, color 0.15s;
 }
 
-.slide-nav-btn:hover {
-  background: rgba(79, 70, 229, 0.1);
-  color: var(--accent);
+.slide-nav-btn:hover,
+.slide-nav-btn:focus-visible {
+  background: rgba(15, 23, 42, 0.07);
+  color: var(--ink);
+  outline: none;
 }
 
 .slide-nav-btn:active {
-  background: rgba(79, 70, 229, 0.18);
+  background: rgba(15, 23, 42, 0.12);
+  color: var(--ink);
 }
 
-#nav-home svg,
-#nav-prev svg,
-#nav-next svg {
-  flex-shrink: 0;
-}
-
-/* ── PDF download button ─────────────────────── */
-#pdf-download {
+/* ── PDF download button ────────────────────────────────────────────── */
+.slide-download-link {
   position: fixed;
-  bottom: 1.2rem;
-  left: 1.2rem;
-  z-index: 1000;
+  bottom: 18px;
+  right: 18px;
+  z-index: 9999;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
   background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--line);
-  color: var(--ink-dim) !important;
-  font-size: 0.78rem;
-  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: var(--ink-dim);
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: background 0.15s;
-  backdrop-filter: blur(4px);
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.slide-download-link:hover {
+  background: rgba(255, 255, 255, 0.98);
+  color: var(--ink);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.slide-download-link svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Image zoom modal ──────────────────────────────────────────────── */
+.img-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+
+.img-modal.open {
+  display: flex;
+}
+
+.img-modal img {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  cursor: default;
+  border: 0;
+}
+
+.img-modal .close-btn {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 40px;
+  text-align: center;
   cursor: pointer;
+  transition: background 150ms;
 }
 
-#pdf-download:hover {
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--ink) !important;
+.img-modal .close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
-/* ── Print styles ────────────────────────────── */
+/* ── Print styles ──────────────────────────────────────────────────── */
 @media print {
   .gh-badge,
   .slide-nav,
-  #pdf-download,
-  #lang-switcher,
+  .slide-download-link,
   #rc-btn,
   #rc-overlay {
     display: none !important;
@@ -336,5 +476,54 @@ html, body {
   }
   body {
     background: white !important;
+  }
+}
+
+/* ── Mobile responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .step {
+    width: 90vw;
+    min-height: 72vh;
+    padding: 2rem 1.8rem;
+    border-radius: 16px;
+    justify-content: flex-start;
+  }
+  .step h1 {
+    font-size: clamp(1.8rem, 4.6vmin, 2.6rem);
+    line-height: 1.12;
+  }
+  .step h2 {
+    font-size: clamp(0.9rem, 2.25vmin, 1.15rem);
+  }
+  .step p,
+  .step li,
+  .step td,
+  .step th,
+  .step blockquote {
+    font-size: clamp(0.9rem, 2.1vmin, 1.08rem);
+    line-height: 1.38;
+  }
+  .step pre {
+    padding: 0.62rem 0.8rem;
+    border-radius: 12px;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .step pre code {
+    font-size: clamp(0.7rem, 1.9vmin, 0.95rem);
+    white-space: pre;
+    word-break: normal;
+  }
+  .slide-nav {
+    bottom: 10px;
+    gap: 2px;
+    padding: 4px 6px;
+  }
+  .slide-nav-btn {
+    padding: 5px 10px;
+    font-size: 0.72rem;
+    gap: 3px;
   }
 }

@@ -1,5 +1,5 @@
 /* ── PRESENTATION RUNTIME ─────────────────────────────────────────────
- * Extracted from build.cjs's navScript template literal.
+ * Adapted from agent-presentation-markpress template.
  * Loaded via <script src> in the generated presentation HTML.
  * Must be placed AFTER <script>impress().init();</script>.
  * ────────────────────────────────────────────────────────────────────*/
@@ -28,41 +28,81 @@
   // ── PDF download button ────────────────────────────────────────────
   const pdfFilename = window.__PDF_FILENAME__ || 'presentation.pdf';
   document.body.append(Object.assign(document.createElement('a'), {
-    id: 'pdf-download',
-    href: pdfFilename,
+    className: 'slide-download-link',
+    href: `./${pdfFilename}`,
     download: pdfFilename,
-    title: 'Download PDF',
-    innerHTML: `${SVG_DOWNLOAD}PDF`,
+    title: 'Download presentation as PDF',
+    ariaLabel: 'Download PDF',
+    innerHTML: SVG_DOWNLOAD,
   }));
 
-  // ── Navigate to current slide on first step to ensure overlay shows ─
-  document.querySelector('#nav-home')?.addEventListener('click', () => {
-    const first = document.querySelector('.step');
-    if (first) impress().goto(first.id);
-  });
-  document.querySelector('#nav-prev')?.addEventListener('click', () => impress().prev());
-  document.querySelector('#nav-next')?.addEventListener('click', () => impress().next());
+  // ── Navigation helpers ─────────────────────────────────────────────
+  const api = window.impress();
 
-  // ── Keyboard shortcuts ─────────────────────────────────────────────
+  const goToStep = (idx) => {
+    const steps = document.querySelectorAll('.step');
+    if (idx >= 0 && idx < steps.length) api.goto(steps[idx].id);
+  };
+
+  const currentStepIndex = () => {
+    const active = document.querySelector('.step.present, .step.active');
+    if (!active) return 0;
+    return [...document.querySelectorAll('.step')].indexOf(active);
+  };
+
+  document.getElementById('nav-home').addEventListener('click', () => goToStep(0));
+  document.getElementById('nav-prev').addEventListener('click', () => goToStep(currentStepIndex() - 1));
+  document.getElementById('nav-next').addEventListener('click', () => goToStep(currentStepIndex() + 1));
+
+  // Disable impress.js built-in keyboard navigation
+  api.next = () => {};
+  api.prev = () => {};
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') { impress().prev(); e.preventDefault(); }
-    if (e.key === 'ArrowRight') { impress().next(); e.preventDefault(); }
-    if (e.key === 'Home') {
-      const first = document.querySelector('.step');
-      if (first) { impress().goto(first.id); e.preventDefault(); }
-    }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goToStep(currentStepIndex() - 1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); goToStep(currentStepIndex() + 1); }
+    else if (e.key === 'Home') { e.preventDefault(); goToStep(0); }
   });
 
-  // ── Touch swipe support for mobile ────────────────────────────────
-  let touchStartX = 0;
+  // ── Touch swipe navigation ─────────────────────────────────────────
+  let sx = 0, sy = 0;
   document.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
+    if (e.touches.length === 1) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }
+  }, { passive: true, capture: true });
   document.addEventListener('touchend', (e) => {
-    const diff = touchStartX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) impress().next();
-      else impress().prev();
+    if (!e.changedTouches.length) return;
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy)) {
+      e.preventDefault();
+      if (dx > 0) goToStep(currentStepIndex() - 1);
+      else goToStep(currentStepIndex() + 1);
     }
-  }, { passive: true });
+  }, { passive: false, capture: true });
+
+  // ── Image zoom modal ───────────────────────────────────────────────
+  (() => {
+    const modal = Object.assign(document.createElement('div'), {
+      className: 'img-modal',
+      innerHTML: '<button class="close-btn" type="button" aria-label="Close">&times;</button><img alt="">',
+    });
+    document.body.append(modal);
+
+    const modalImg = modal.querySelector('img');
+    const closeBtn = modal.querySelector('.close-btn');
+
+    const openModal = (src) => { modalImg.src = src; modal.classList.add('open'); };
+    const closeModal = () => { modal.classList.remove('open'); modalImg.src = ''; };
+
+    document.querySelectorAll('.step img').forEach((img) => {
+      img.addEventListener('click', (e) => { e.stopPropagation(); openModal(img.src); });
+    });
+
+    modal.addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeModal(); });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+  })();
 })();

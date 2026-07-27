@@ -19,25 +19,3 @@ npm install
 npm run build      # → output/index.html
 npm run preview    # open in browser
 ```
-
-## Project Structure
-
-```
-slides/
-  presentation.md   # Slide source
-  images/           # Images referenced in slides
-  diagrams/         # Excalidraw source files
-build.cjs           # Build script
-public/
-  presentation/     # CSS and JS for the slideshow
-  remote/           # Mobile remote control
-package.json
-mise.toml           # Node.js version pin
-.github/
-  workflows/
-    deploy-pages.yml  # Auto-deploy to GitHub Pages on push to main
-.agents/
-  skills/           # AI agent skills for writing and styling slides
-research/           # Brainstorming notes and planning materials
-artifact/           # QA screenshots and raw notes
-```

@@ -280,6 +280,45 @@ body {
   letter-spacing: -0.04em;
   line-height: 1.08;
 }
+#step-13 table {
+  width: min(100%, 480px);
+  margin: 0.6rem auto 0;
+  border: 0;
+  background: transparent;
+  table-layout: fixed;
+  border-spacing: 20px 6px;
+}
+#step-13 thead th {
+  background: transparent;
+  color: var(--ink-dim);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+  font-size: clamp(0.8rem, 1.4vmin, 1rem);
+  text-align: center;
+  border: 0;
+  padding-bottom: 0.1rem;
+}
+#step-13 td {
+  border: 0;
+  width: 50%;
+  padding: 0.15rem 0.2rem;
+  background: transparent;
+}
+#step-13 tbody tr:nth-child(1) img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+#step-13 tbody tr:nth-child(2) img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin: 4px auto 0;
+  border: 0;
+  border-radius: 0;
+}
 
 /* ── Syntax Highlighting (GitHub-inspired light) ────────────────────── */
 .hljs {

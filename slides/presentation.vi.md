@@ -260,9 +260,12 @@ Tạo **spec artifact** trước — mọi thứ khác được suy ra từ nó
 
 # Cảm Ơn
 
-**Duc Nguyen**
+Nếu có thắc mắc, hãy liên hệ qua <a href="https://github.com/vanduc2514" target="_blank" rel="noopener noreferrer" style="color: var(--group-accent); text-decoration: underline;">GitHub</a> hoặc quét mã QR bên dưới.
 
-🐙 [github.com/vanduc2514](https://github.com/vanduc2514)
+| GitHub | Website |
+|---|---|
+| ![GitHub QR](images/github-qr.png) | ![Website QR](images/nvduc-qr.png) |
+| ![GitHub icon](images/github-icon.svg) | ![Website icon](images/website-icon.svg) |
 
 <!-- SPEAKER NOTES — Thank You Slide
 - Thank the audience for their time.

@@ -32,6 +32,7 @@ body {
 .step {
   width: min(1160px, 84vw);
   min-height: min(680px, 75vh);
+  max-height: 75vh;
   padding: 2.8rem 3.2rem;
   box-sizing: border-box;
   border: 1px solid var(--line);
@@ -484,6 +485,7 @@ body {
   .step {
     width: 90vw;
     min-height: 72vh;
+    max-height: 75vh;
     padding: 2rem 1.8rem;
     border-radius: 16px;
     justify-content: flex-start;
